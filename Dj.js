@@ -5,6 +5,8 @@ leftWristY=0;
 rightwristX=0;
 rightWristY=0;
 scoreLeftWrist=0;
+scoreRightWrist=0;
+status=0;
 function preload(){
     song1= loadSound("music.mp3");
     song2= loadSound("music2.mp3");
@@ -27,10 +29,19 @@ function draw(){
     fill("#BD1742");
     stroke("#BD1742");
 
-    if (song1.isPlaying()){
-    song1.stop();
-    }
+    if (scoreRightWrist > 0.2){
+
+    circle(rightWristY, rightwristX, 20);
     
+    if (song1.isPlaying()){
+    song1.stop()
+    }
+    InNumberRightWristY= Number(rightwristY);
+    remove_decimals= floor(InNumberRightWristY);
+    rightwristY_divide_1000= remove_decimals/1000;
+    volume= rightwristY_divide_1000*2;
+    song2.play();
+}
     if (scoreLeftWrist > 0.2){
         if (song2.isPlaying()){
             song2.stop();
@@ -40,7 +51,6 @@ function draw(){
         remove_decimals= floor(InNumberLeftWristY);
         leftWristY_divide_1000= remove_decimals/1000;
         volume= leftWristY_divide_1000*2;
-        document.getElementById("volume").innerHTML="Volume="+ volume;
         song1.play();
     }
 }
@@ -52,8 +62,9 @@ function play(){
 function gotPoses(results){
     if (results.length>0){
         console.log(results);
+        scoreRightWrist= results[0].pose.keypoints[10].score;
         scoreLeftWrist= results[0].pose.keypoints[9].score;
-        console.log("scoreLeftWrist="+ scoreLeftWrist);
+        console.log("scoreLeftWrist="+ scoreLeftWrist + "scoreRightWrist" + scoreRightWrist);
         leftWristX= results[0].pose.leftWrist.x;
         leftWristY= results[0].pose.leftWrist.y;
         console.log("leftWristX" + leftWristX + "leftWristY" + leftWristY);
